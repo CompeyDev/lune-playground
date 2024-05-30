@@ -7,16 +7,26 @@
   import { keymap } from "@codemirror/view";
   import { EditorView, basicSetup } from "codemirror";
   import {
+    LanguageServerClient,
     languageServerWithTransport,
   } from "codemirror-languageserver";
   import { WebSocketTransport } from "@open-rpc/client-js";
 
   const LSP_SOCKET = "ws://localhost:3001/";
+  const sock = new WebSocketTransport(LSP_SOCKET)
+  const documentUri = `file:///tmp/${Math.random().toString(16).substring(2, 8)}.lua`
 
   const luauLspClient = languageServerWithTransport({
     rootUri: "file:///tmp",
-    transport: new WebSocketTransport(LSP_SOCKET),
-    documentUri: `file:///tmp/test.lua`,
+    transport: sock,
+    client: new LanguageServerClient({
+      transport: sock,
+      workspaceFolders: null,
+      languageId: "lua",
+      rootUri: "file:///tmp",
+      documentUri
+    }),
+    documentUri,
     workspaceFolders: null,
     languageId: "lua",
   });
@@ -31,4 +41,12 @@
     ],
     parent: document.getElementById("main")!,
   });
+
+  // HACK: We reload the page after the initial setup so that the 
+  // server gets an initial request and is ready for future requests 
+  // too
+  if (!document.location.hash) {
+    document.location.hash = "ws"
+    location.reload()
+  }
 </script>
