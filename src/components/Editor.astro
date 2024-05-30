@@ -1,0 +1,34 @@
+<code id="main"></code>
+
+<script>
+  import { defaultKeymap, indentWithTab } from "@codemirror/commands";
+  import { StreamLanguage } from "@codemirror/language";
+  import { lua } from "@codemirror/legacy-modes/mode/lua";
+  import { keymap } from "@codemirror/view";
+  import { EditorView, basicSetup } from "codemirror";
+  import {
+    languageServerWithTransport,
+  } from "codemirror-languageserver";
+  import { WebSocketTransport } from "@open-rpc/client-js";
+
+  const LSP_SOCKET = "ws://localhost:3001/";
+
+  const luauLspClient = languageServerWithTransport({
+    rootUri: "file:///tmp",
+    transport: new WebSocketTransport(LSP_SOCKET),
+    documentUri: `file:///tmp/test.lua`,
+    workspaceFolders: null,
+    languageId: "lua",
+  });
+
+  new EditorView({
+    extensions: [
+      basicSetup,
+      StreamLanguage.define(lua),
+      luauLspClient,
+      keymap.of(defaultKeymap),
+      keymap.of([indentWithTab]),
+    ],
+    parent: document.getElementById("main")!,
+  });
+</script>
