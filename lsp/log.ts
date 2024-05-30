@@ -2,6 +2,12 @@ import * as log from "https://deno.land/std@0.224.0/log/mod.ts";
 import * as colors from "https://deno.land/std@0.224.0/fmt/colors.ts";
 
 log.setup({
+  loggers: {
+    default: {
+      level: "DEBUG",
+      handlers: ["default"]
+    }
+  },
   handlers: {
     default: new log.ConsoleHandler("DEBUG", {
       formatter: (logRecord: log.LogRecord) => {
