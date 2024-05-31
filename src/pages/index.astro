@@ -11,7 +11,7 @@ import Editor from "../components/Editor.astro";
         // HACK: We reload the page after the initial setup so that the 
         // server gets an initial request and is ready for future requests 
         // too
-        if (!window.location.hash && !localStorage.getItem("id")) {
+        if (!window.location.hash) {
             const id = Math.random().toString(16).substring(2, 8)
             document.location.hash = id
             location.reload()
