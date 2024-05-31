@@ -1,5 +1,33 @@
 ---
-import Code from "../components/Editor.astro";
+import Editor from "../components/Editor.astro";
 ---
 
-<Code />
+<>
+    <div class="float-container">
+        <div class="float-child"><Editor /></div>
+        <div class="float-child"><code style="padding-top: 5px;">output</code></div>
+    </div>
+    <script>
+        // HACK: We reload the page after the initial setup so that the 
+        // server gets an initial request and is ready for future requests 
+        // too
+        if (!window.location.hash && !localStorage.getItem("id")) {
+            const id = Math.random().toString(16).substring(2, 8)
+            document.location.hash = id
+            location.reload()
+        }
+    </script>
+</>
+
+<style>
+    .float-container {
+        padding: 20px;
+        padding-top: 0px;
+    }
+
+    .float-child {
+        width: 45%;
+        float: left;
+        padding: 20px;
+    }
+</style>

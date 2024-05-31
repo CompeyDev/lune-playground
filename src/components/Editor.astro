@@ -1,52 +1,23 @@
 <code id="main"></code>
-
 <script>
-  import { defaultKeymap, indentWithTab } from "@codemirror/commands";
-  import { StreamLanguage } from "@codemirror/language";
-  import { lua } from "@codemirror/legacy-modes/mode/lua";
-  import { keymap } from "@codemirror/view";
-  import { EditorView, basicSetup } from "codemirror";
-  import {
-    LanguageServerClient,
-    languageServerWithTransport,
-  } from "codemirror-languageserver";
+  import { EditorView } from "codemirror";
+  import luauLsp from "../../lsp/client";
   import { WebSocketTransport } from "@open-rpc/client-js";
+  import extensions from "./codemirror/extensions";
 
-  const LSP_SOCKET = "ws://localhost:3001/";
-  const sock = new WebSocketTransport(LSP_SOCKET)
-  const documentUri = `file:///tmp/${Math.random().toString(16).substring(2, 8)}.lua`
+  const editorArea = document.getElementById("main")!;
 
-  const luauLspClient = languageServerWithTransport({
-    rootUri: "file:///tmp",
-    transport: sock,
-    client: new LanguageServerClient({
-      transport: sock,
-      workspaceFolders: null,
-      languageId: "lua",
-      rootUri: "file:///tmp",
-      documentUri
-    }),
-    documentUri,
-    workspaceFolders: null,
-    languageId: "lua",
-  });
+  const sock = new WebSocketTransport("ws://localhost:3001/");
+  const documentUri = `file:///tmp/${document.location.hash.substring(2, 7)}.lua`
+
+  const luauLspClient = luauLsp(sock, documentUri);
 
   new EditorView({
-    extensions: [
-      basicSetup,
-      StreamLanguage.define(lua),
-      luauLspClient,
-      keymap.of(defaultKeymap),
-      keymap.of([indentWithTab]),
-    ],
-    parent: document.getElementById("main")!,
+    extensions: extensions(luauLspClient),
+    parent: editorArea,
   });
-
-  // HACK: We reload the page after the initial setup so that the 
-  // server gets an initial request and is ready for future requests 
-  // too
-  if (!document.location.hash) {
-    document.location.hash = "ws"
-    location.reload()
-  }
 </script>
+<style>
+  .cm-editor { height: 50px }
+  .cm-scroller { overflow: auto }
+</style>
