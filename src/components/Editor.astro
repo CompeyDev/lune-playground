@@ -1,4 +1,4 @@
-<code id="main"></code>
+<code id="main" class="bg-fuchsia-50"></code>
 <script>
   import { EditorView } from "codemirror";
   import luauLsp from "../../lsp/client";
@@ -8,16 +8,32 @@
   const editorArea = document.getElementById("main")!;
 
   const sock = new WebSocketTransport("ws://localhost:3001/");
-  const documentUri = `file:///tmp/${document.location.hash.substring(2, 7)}.lua`
+  const documentUri = `file:///tmp/${document.location.hash.substring(2, 7)}.lua`;
 
   const luauLspClient = luauLsp(sock, documentUri);
 
-  new EditorView({
+  const editor = new EditorView({
     extensions: extensions(luauLspClient),
     parent: editorArea,
   });
+
+  editor.dispatch({});
 </script>
 <style>
-  .cm-editor { height: 50px }
-  .cm-scroller { overflow: auto }
+  .cm-editor {
+    @apply bg-fuchsia-100;
+  }
+  .cm-content,
+  .cm-gutter {
+    min-height: 150px;
+  }
+  .cm-gutters {
+    margin: 1px;
+  }
+  .cm-scroller {
+    overflow: auto;
+  }
+  .cm-wrap {
+    border: 1px solid silver;
+  }
 </style>

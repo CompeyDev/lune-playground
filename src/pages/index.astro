@@ -3,31 +3,34 @@ import Editor from "../components/Editor.astro";
 ---
 
 <>
-    <div class="float-container">
-        <div class="float-child"><Editor /></div>
-        <div class="float-child"><code style="padding-top: 5px;">output</code></div>
+  <div class="p-5 pt-0 bg-fuchsia-100 h-screen max-h-screen overflow-y-hidden">
+    <p class="text-fuchsia-600 pt-6 pb-1 font-medium text-xl">
+      Lune Playground
+    </p>
+    <p class="pb-4">By Compey & Ethan</p>
+    <div class="grid grid-cols-2 gap-4 pb-4 h-[calc(100vh-100px)]">
+      <div class="bg-white rounded-lg p-2">
+        <span class="bg-fuchsia-50 rounded-md px-2 py-1 mb-4 inline-block"
+          >Editor</span
+        ><Editor />
+      </div>
+
+      <div class="bg-white rounded-lg p-2">
+        <span class="bg-fuchsia-50 rounded-md px-2 py-1 mb-4 inline-block"
+          >Output</span
+        >
+        <div class="px-1"><code> boogity boogity boogity </code></div>
+      </div>
     </div>
-    <script>
-        // HACK: We reload the page after the initial setup so that the 
-        // server gets an initial request and is ready for future requests 
-        // too
-        if (!window.location.hash) {
-            const id = Math.random().toString(16).substring(2, 8)
-            document.location.hash = id
-            location.reload()
-        }
-    </script>
+  </div>
+  <script>
+    // HACK: We reload the page after the initial setup so that the
+    // server gets an initial request and is ready for future requests
+    // too
+    if (!window.location.hash) {
+      const id = Math.random().toString(16).substring(2, 8);
+      document.location.hash = id;
+      location.reload();
+    }
+  </script>
 </>
-
-<style>
-    .float-container {
-        padding: 20px;
-        padding-top: 0px;
-    }
-
-    .float-child {
-        width: 45%;
-        float: left;
-        padding: 20px;
-    }
-</style>
